@@ -2,7 +2,7 @@
     "name": "DY Extension Example",
     "version": "1.0",
     "description": "User affinity score tracker",
-    "permissions": ["storage"],
+    "permissions": ["declarativeContent", "storage"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false
