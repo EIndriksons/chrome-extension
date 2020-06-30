@@ -1,0 +1,6 @@
+{
+    "name": "DY Extension Example",
+    "version": "1.0",
+    "description": "User affinity score tracker",
+    "manifest_version": 2
+  }
