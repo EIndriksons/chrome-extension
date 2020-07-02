@@ -15,11 +15,40 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             // capturing if GET category parameter does not exist on the page
             // could be true if the client is coming from new-arrivals
             if (param === undefined || param === null) {
-                console.log('oh no! #TODO');
+                
+                // communicate with content.js to search DOM for category
+                chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                    chrome.tabs.sendMessage(tabs[0].id, {query_category: true}, (response) => {
+                        let category_url = new URL(response.category);
+                        save(category_url.pathname, 1);
+                    });
+                });
+
             } else {
-                console.log(param);
+                save(param, 1);
             }
         }
         
     }
 });
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.clearStorage) {
+        // clear chrome local storage as per request
+        chrome.storage.local.clear();
+    }
+});
+
+function save(category, increment) {
+    chrome.storage.local.get(category, (data) => {
+
+        if (Object.keys(data).length === 0) {
+            // if category does not exist in storage - create it
+            chrome.storage.local.set({[category]: increment});
+        } else {
+            // if category exists - just increment it
+            let value = data[category] + increment;
+            chrome.storage.local.set({[category]: value});
+        }
+    });
+}
