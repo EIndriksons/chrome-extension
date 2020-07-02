@@ -39,6 +39,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+chrome.storage.onChanged.addListener((changes, areaName) => {
+
+    // when storage contents change - send update to popup.js
+    let storage;
+    chrome.storage.local.get(null, (data) => {
+        chrome.runtime.sendMessage({updateStorage: data});
+    });
+    
+});
+
+
+// function for saving category names inside chrome.storage.local
 function save(category, increment) {
     chrome.storage.local.get(category, (data) => {
 
@@ -50,5 +62,6 @@ function save(category, increment) {
             let value = data[category] + increment;
             chrome.storage.local.set({[category]: value});
         }
+
     });
 }
