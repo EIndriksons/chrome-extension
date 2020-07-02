@@ -1,17 +1,16 @@
-const clearStorage = document.querySelector('#clearStorage');
+const clearStorage = document.querySelector('#clearStorage'); // button for storage cleanup
+const results = document.querySelector('#results'); // div for data output
 
+// button handler
 clearStorage.onclick = (element) => {
     chrome.runtime.sendMessage({clearStorage: true});
+    results.innerHTML = '';
 };
 
-const results = document.querySelector('#results');
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.updateStorage !== null) {
-
-        results.innerHTML = '';
-        for (let item in request.updateStorage) {
-            results.innerHTML += `<li>${item} - ${request.updateStorage[item]}</li>`
-        }
+// get local storage values and display them in div
+chrome.runtime.sendMessage({updateStorage: true}, (response) => {
+    results.innerHTML = '';
+    for (let item in response.updatedStorage) {
+        results.innerHTML += `<li>${item} - ${response.updatedStorage[item]}</li>`
     }
 });

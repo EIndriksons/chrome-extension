@@ -36,19 +36,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.clearStorage) {
         // clear chrome local storage as per request
         chrome.storage.local.clear();
+        sendResponse({clearedStorage: true});
+    } else if (request.updateStorage) {
+        (async () => {
+            const storage = await getStorage();
+            sendResponse({updatedStorage : storage});
+        })();
+        return true;
     }
 });
 
-chrome.storage.onChanged.addListener((changes, areaName) => {
-
-    // when storage contents change - send update to popup.js
-    let storage;
-    chrome.storage.local.get(null, (data) => {
-        chrome.runtime.sendMessage({updateStorage: data});
-    });
-    
-});
-
+function getStorage() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(null, (data) => {
+            resolve(data);
+        });
+    })
+};
 
 // function for saving category names inside chrome.storage.local
 function save(category, increment) {
