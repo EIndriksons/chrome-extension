@@ -10,11 +10,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (url.hostname === 'www.urbanoutfitters.com' && url.pathname.includes('/shop/')) {
 
             // search for GET category parameter
-            let param = url.searchParams.get('category');
+            let category = url.searchParams.get('category');
             
             // capturing if GET category parameter does not exist on the page
             // could be true if the client is coming from new-arrivals
-            if (param === undefined || param === null) {
+            if (category === undefined || category === null) {
                 
                 // communicate with content.js to search DOM for category
                 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -25,18 +25,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 });
 
             } else {
-                save(param, 1);
+                // save category to the local storage
+                save(category, 1);
             }
         }
         
     }
 });
 
+// Chrome Extension message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+
+    // REQUEST for clearing/resetting storage
     if (request.clearStorage) {
         // clear chrome local storage as per request
         chrome.storage.local.clear();
         sendResponse({clearedStorage: true});
+
+    // REQUEST for updating local storage data in popup.html
     } else if (request.updateStorage) {
         (async () => {
             const storage = await getStorage();
@@ -46,6 +52,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+// Function for getting everything from chrome.storage.local
 function getStorage() {
     return new Promise((resolve, reject) => {
         chrome.storage.local.get(null, (data) => {
@@ -54,7 +61,7 @@ function getStorage() {
     })
 };
 
-// function for saving category names inside chrome.storage.local
+// Function for saving category inside chrome.storage.local
 function save(category, increment) {
     chrome.storage.local.get(category, (data) => {
 

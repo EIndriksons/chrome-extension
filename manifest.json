@@ -1,7 +1,7 @@
 {
     "name": "DY Extension Example",
     "version": "1.0",
-    "description": "User affinity score tracker",
+    "description": "User affinity score tracker by Edgars Indriksons (@EIndriksons)",
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
     "background": {
         "scripts": ["background.js"]
@@ -9,17 +9,15 @@
     "browser_action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "images/get_started16.png",
-            "32": "images/get_started32.png",
-            "48": "images/get_started48.png",
-            "128": "images/get_started128.png"
+            "16": "images/dy-16x16.png",
+            "32": "images/dy-32x32.png",
+            "96": "images/dy-96x96.png"
         }
     },
     "icons": {
-        "16": "images/get_started16.png",
-        "32": "images/get_started32.png",
-        "48": "images/get_started48.png",
-        "128": "images/get_started128.png"
+        "16": "images/dy-16x16.png",
+        "32": "images/dy-32x32.png",
+        "96": "images/dy-96x96.png"
     },
     "manifest_version": 2,
     "content_scripts": [
