@@ -19,11 +19,14 @@
         "32": "images/dy-32x32.png",
         "96": "images/dy-96x96.png"
     },
-    "manifest_version": 2,
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
             "js": ["content.js"]
         }
-    ]
+    ],
+    "web_accessible_resources": [
+        "script.js"
+    ],
+    "manifest_version": 2
   }

@@ -3,7 +3,7 @@ body {
 }
 
 h1 {
-    font-size: 20px;
+    font-size: 16px;
 }
 
 table {
@@ -18,11 +18,11 @@ td, th {
 }
 
 button {
-    height: 50px;
+    height: 40px;
     width: 100px;
     outline: none;
 }
 
 #clearStorage {
-    margin-top: 15px;
+    margin-top: 10px;
 }

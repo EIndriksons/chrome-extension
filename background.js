@@ -19,7 +19,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 // communicate with content.js to search DOM for category
                 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
                     chrome.tabs.sendMessage(tabs[0].id, {query_category: true}, (response) => {
-                        let category_url = new URL(response.category);
+                        let category_url = new URL(response.category_response);
                         save(category_url.pathname, 1);
                     });
                 });
@@ -49,6 +49,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sendResponse({updatedStorage : storage});
         })();
         return true;
+
+    // REQUEST for adding product to Cart
+    } else if (request.addedToCart) {
+        save(request.addedToCart, 3);
     }
 });
 
