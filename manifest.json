@@ -1,7 +1,7 @@
 {
-    "name": "DY Extension Example",
+    "name": "DY User Affinity Tracker",
     "version": "1.0",
-    "description": "User affinity score tracker by Edgars Indriksons (@EIndriksons)",
+    "description": "User affinity score tracker accross Urbanoutfitters as part of the Interview Test. Made by Edgars Indriksons (@EIndriksons).",
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
     "background": {
         "scripts": ["background.js"]
