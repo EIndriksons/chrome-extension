@@ -1,3 +1,7 @@
+// Setting global values for increments
+INCREMENT_PRODUCT = 1;
+INCREMENT_CART = 3;
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
     // make sure page is loaded
@@ -20,13 +24,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
                     chrome.tabs.sendMessage(tabs[0].id, {query_category: true}, (response) => {
                         let category_url = new URL(response.category_response);
-                        save(category_url.pathname, 1);
+                        save(category_url.pathname, INCREMENT_PRODUCT);
                     });
                 });
 
             } else {
                 // save category to the local storage
-                save(category, 1);
+                save(category, INCREMENT_PRODUCT);
             }
         }
         
@@ -36,13 +40,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 // Chrome Extension message listener
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-    // REQUEST for clearing/resetting storage
+    // REQUEST for clearing/resetting storage (from popup.js)
     if (request.clearStorage) {
         // clear chrome local storage as per request
         chrome.storage.local.clear();
         sendResponse({clearedStorage: true});
 
-    // REQUEST for updating local storage data in popup.html
+    // REQUEST for updating local storage data (from popup.js)
     } else if (request.updateStorage) {
         (async () => {
             const storage = await getStorage();
@@ -50,9 +54,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })();
         return true;
 
-    // REQUEST for adding product to Cart
+    // REQUEST for adding affinity category from "Add to Cart" (from content.js)
     } else if (request.addedToCart) {
-        save(request.addedToCart, 3);
+        save(request.addedToCart, INCREMENT_CART);
     }
 });
 
@@ -67,15 +71,19 @@ function getStorage() {
 
 // Function for saving category inside chrome.storage.local
 function save(category, increment) {
-    chrome.storage.local.get(category, (data) => {
+
+    // retain only alphanumerical characters, _, - and else
+    let category_name = category.replace(/[^a-zA-Z0-9 _-]+/gi, '');
+
+    chrome.storage.local.get(category_name, (data) => {
 
         if (Object.keys(data).length === 0) {
             // if category does not exist in storage - create it
-            chrome.storage.local.set({[category]: increment});
+            chrome.storage.local.set({[category_name]: increment});
         } else {
             // if category exists - just increment it
-            let value = data[category] + increment;
-            chrome.storage.local.set({[category]: value});
+            let value = data[category_name] + increment;
+            chrome.storage.local.set({[category_name]: value});
         }
 
     });
